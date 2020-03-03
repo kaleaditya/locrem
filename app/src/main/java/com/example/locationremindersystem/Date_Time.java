@@ -1,76 +1,94 @@
 package com.example.locationremindersystem;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.TimePicker;
-import android.widget.Toast;
 
-import java.sql.Date;
-import java.text.DateFormat;
-import java.time.Year;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.allyants.notifyme.NotifyMe;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
+import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
+
+
 import java.util.Calendar;
 
 
 public class Date_Time extends AppCompatActivity implements DatePickerDialog.OnDateSetListener,TimePickerDialog.OnTimeSetListener {
 
-    EditText mtitle,mmessage;
-    Button mbtndate,mcancle;
-    TextView mresult;
     Calendar now = Calendar.getInstance();
-   int day,month,year,hour,minute;
-   int mday,mmonth,myear,mhour,mminute;
+    TimePickerDialog tpd;
+    DatePickerDialog dpd;
+    EditText title,message;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_date__time);
-        mbtndate = findViewById(R.id.btnDate);
-        mresult  = findViewById(R.id.Result);
+        Button btndate = findViewById(R.id.btnDate);
+        Button cancel  = findViewById(R.id.cancle);
+        title = findViewById(R.id.title);
+        message = findViewById(R.id.message);
 
-        mbtndate.setOnClickListener(new View.OnClickListener() {
+        dpd = DatePickerDialog.newInstance(
+                Date_Time.this,
+                now.get(Calendar.YEAR),
+                now.get(Calendar.MONTH),
+                now.get(Calendar.DAY_OF_MONTH)
+        );
+
+        tpd = TimePickerDialog.newInstance(
+                Date_Time.this,
+                now.get(Calendar.HOUR_OF_DAY),
+                now.get(Calendar.MINUTE),
+                now.get(Calendar.SECOND),
+                false
+        );
+
+        cancel.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Calendar c=Calendar.getInstance();
-                year =c.get(Calendar.YEAR);
-                month =c.get(Calendar.MONTH);
-                day =c.get(Calendar.DAY_OF_MONTH);
-                DatePickerDialog datePickerDialog=new DatePickerDialog(Date_Time.this,Date_Time.this,year,month,day);
-                datePickerDialog.show();
+            public void onClick(View v){
+                NotifyMe.cancel(getApplicationContext(),"test");
             }
         });
-
+        btndate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dpd.show(getFragmentManager(),"DatePickerDialog");
+            }
+        });
     }
 
     @Override
-    public void onDateSet(DatePicker datePicker,int i,int i1,int i2) {
-        myear = i;
-        mmonth=i1+i;
-        mday  =i2;
-        Calendar c=Calendar.getInstance();
-        hour=c.get(Calendar.HOUR);
-        minute=c.get(Calendar.MINUTE);
-        TimePickerDialog timePickerDialog = new TimePickerDialog(Date_Time.this,Date_Time.this,hour,minute, true);
-        timePickerDialog.show();
+    public void onDateSet (DatePickerDialog view,int year, int monthOfYear, int dayOfMonth){
+        now .set(Calendar.YEAR,year);
+        now.set(Calendar.MONTH,monthOfYear);
+        now.set(Calendar.DAY_OF_MONTH,dayOfMonth);
+        tpd.show(getFragmentManager(),"TimePickerDialog");
     }
 
-    @Override
-    public void onTimeSet(TimePicker view, int i, int i1) {
-        mhour   =i;
-        mminute =i1;
+    public void onTimeSet (TimePickerDialog view,int hourOfDay, int minite, int second){
+        now.set(Calendar.HOUR_OF_DAY,hourOfDay);
+        now.set(Calendar.MINUTE,minite);
+        now.set(Calendar.SECOND,second);
 
-        Toast.makeText(Date_Time.this,
-                "Year "+myear+
-                " Month "+mmonth +
-                " day "+mday+
-                " Hours "+mhour+
-                " Minute "+mminute,Toast.LENGTH_LONG).show();
+        NotifyMe notifyMe = new NotifyMe.Builder(getApplicationContext())
+                .title(title.getText().toString())
+                .content(message.getText().toString())
+                .color(25,0,0,255)
+                .led_color (255,255,255,255)
+                .time(now)
+                .addAction(new Intent(),"Snooze",false)
+                .key("test")
+                .addAction(new Intent(),"Dismiss",true,false)
+                .addAction(new Intent(),"Done")
+                .large_icon(R.mipmap.ic_launcher_round)
+                .build();
     }
 }

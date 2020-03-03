@@ -28,6 +28,13 @@ public class MainActivity extends AppCompatActivity {
              }
         });
 
+        mlocation.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick (View v){
+                startActivity(new Intent(getApplicationContext(),MapActivity.class));
+            }
+        });
+
     }
 
     public void logout (View view){

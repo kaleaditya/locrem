@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:background="@drawable/img_2"
     tools:context=".Register"
+    android:layout_centerHorizontal="true">
+
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical">
-
-
-
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -73,17 +76,17 @@
         android:layout_height="wrap_content"
         android:id="@+id/registerbtn"
         android:layout_marginTop="30dp"
-        android:layout_marginLeft="150dp"
         android:text="REGISTER"
-        android:padding="18dp"/>
+        android:padding="18dp"
+        android:layout_gravity="center_horizontal"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/gotologin"
         android:layout_marginTop="20dp"
-        android:layout_marginLeft="80dp"
         android:padding="5dp"
         android:textSize="18dp"
+        android:layout_gravity="center_horizontal"
         android:textColor="#ffff"
         android:text="Already Register? Login Here"/>
 
@@ -97,3 +100,4 @@
         android:visibility="invisible"
         />
 </LinearLayout>
+</ScrollView>
